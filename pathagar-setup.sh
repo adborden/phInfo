@@ -37,7 +37,7 @@ else
 fi
 
 echo "Checking that the MYSQL_PASSWORD env var is set."
-if [ -z $MYSQL_PASSWORD ]
+if [ -z "$MYSQL_PASSWORD" ]
 then
     echo "The MYSQL_PASSWORD environment variable hasn't been set!"
     echo "Script 'pathagar-setup.sh' is being aborted."
@@ -148,6 +148,7 @@ fi
 # a bug in the above forces us to NOT set -o nounset
 
 echo "Activate the penv..."
+# shellcheck disable=SC1091
 if source penv/bin/activate
 then
     echo "... success."
@@ -276,6 +277,7 @@ else
 fi
 
 echo "2. source penv/bin/activate..."
+# shellcheck disable=SC1091
 if source penv/bin/activate
 then
     echo "... success."
