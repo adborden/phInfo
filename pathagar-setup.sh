@@ -12,8 +12,14 @@
 # set +o nounset  # To overcome PS1 unset bug in virtualenv.
 # The only environment variable we care about is MYSQL_PASSWORD
 # and we test for that in the code.
-echo "Begin pathagar-setup.sh script: `date`"
-cd
+echo "Begin pathagar-setup.sh script: $(date)"
+echo "Attempting to cd ..."
+if ! cd
+then
+  echo 'Could not cd into $HOME directory.' >&2
+  exit 1
+fi
+
 if [ -d /home/pi/pathagar ]
 then
     echo "It seems the pathagar repo has already been cloned."
@@ -28,7 +34,11 @@ fi
 if [ -d /home/pi/phInfo ]
 then
     echo "Change into the phInfo repo's directory."
-    cd /home/pi/phInfo
+    if ! cd /home/pi/phInfo
+    then
+      echo "Could not cd into phInfo." >&2
+      exit 1
+    fi
 else
     echo "I can't imagine how it could happen, but the phInfo"
     echo "directory is missing or in the wrong place-"
@@ -61,7 +71,7 @@ else
         echo "  b. local_settings.py"
 
         echo "Running sed to set password variable in the two target files."
-        if sed -i s/MYSQL_PASSWORD/$MYSQL_PASSWORD/g mysql-setup.sh local_settings.py
+        if sed -i s/MYSQL_PASSWORD/"$MYSQL_PASSWORD"/g mysql-setup.sh local_settings.py
         then
             echo "...success, but still worth checking if the"
             echo "...password is properly set in the two files."
@@ -303,4 +313,4 @@ else
     echo "... failed! Terminating!"
     exit 1
 fi
-echo "End pathagar-setup.sh script: `date`"
+echo "End pathagar-setup.sh script: $(date)"
